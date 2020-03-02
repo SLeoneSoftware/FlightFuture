@@ -5,8 +5,10 @@ from sklearn import preprocessing
 from sklearn.neural_network import MLPClassifier
 
 #Obtain and clean flight data from csv file
-def get_data(file='flights.csv',path='flight-delays',seed=1067748903,datatype=str):
+def get_data(file='flights-sample.csv',path='data',seed=1067748903,datatype=str):
 	data = numpy.genfromtxt(os.path.join(path,file),delimiter=',',dtype=datatype)
+	#Shuffle Data
+	numpy.random.shuffle(data)
 	num_x = data[:,[ 0,1,2,3,5,9, 14, 17, 20]]
 	alph_x = data[:,[4,6,7,8]]
 	enc = preprocessing.OrdinalEncoder()
@@ -15,11 +17,20 @@ def get_data(file='flights.csv',path='flight-delays',seed=1067748903,datatype=st
 	#For simplicity in dealing with values, all features will be returned to original position
 	x = numpy.hstack((num_x[:,[ 0,1,2,3]], alph_x[:,[0]], num_x[:,[4]], alph_x[:,[1,2,3]], num_x[:,[ 5,6,7,8]]))
 	#This project only needs to predict prospects of flight cancellation/delays , Arrival Time, and Departure Time
-	y = data[:,[21, 23,24]]
-	return x, y
+	#Note to self: add 21 in later
+	y = data[:,[23,24]]
+	#Convert str arrays to float arrays
+	x = x.astype(numpy.float)
+	y = y.astype(numpy.float)
+	train_x = x[0:800, :]
+	train_y = y[0:800, :]
+	test_x = x[801:998, :]
+	test_y = y[801:908, :]
+	return train_x, train_y, test_x, test_y
 
-x, y = get_data()
-print(x)
+
+
+train_x, train_y, test_x, test_y = get_data()
 
 
 #Data By Column: Index, Numeric vs Alphabetic, Independent vs Dependent, Attribute Name
