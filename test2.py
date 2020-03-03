@@ -32,9 +32,6 @@ def get_data(file='flights-sample.csv',path='data',seed=1067748903,datatype=str)
 def get_accuracy(labels, predictions):
 	total = len(labels)
 	if not total == len(predictions):
-		print("failure")
-		print("len labels: ", len(labels))
-		print("len predictions: ", len(predictions))
 		return 0
 	else:
 		accuracy = sum(1 for (x,y) in zip(labels, predictions) if x == y)/total
