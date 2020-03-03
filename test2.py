@@ -2,10 +2,11 @@ import numpy
 import os
 import sqlite3
 from sklearn import preprocessing
+from sklearn.metrics import confusion_matrix
 from sklearn.neural_network import MLPClassifier
 
 #Obtain and clean flight data from csv file
-def get_data(file='flights-sample.csv',path='data',seed=1067748903,datatype=str):
+def get_data(labels, file='flights-sample.csv',path='data',seed=1067748903,datatype=str):
 	data = numpy.genfromtxt(os.path.join(path,file),delimiter=',',dtype=datatype)
 	#Shuffle Data
 	numpy.random.shuffle(data)
@@ -16,9 +17,7 @@ def get_data(file='flights-sample.csv',path='data',seed=1067748903,datatype=str)
 	alph_x = enc.transform(alph_x)
 	#For simplicity in dealing with values, all features will be returned to original position
 	x = numpy.hstack((num_x[:,[ 0,1,2,3]], alph_x[:,[0]], num_x[:,[4]], alph_x[:,[1,2,3]], num_x[:,[ 5,6,7,8]]))
-	#This project only needs to predict prospects of flight cancellation/delays , Arrival Time, and Departure Time
-	#Note to self: add 21 in later
-	y = data[:,[23]]
+	y = data[:,[labels]]
 	#Convert str arrays to float arrays
 	x = x.astype(numpy.float)
 	y = y.astype(numpy.float)
@@ -43,11 +42,16 @@ def get_predictions(model, train_x, train_y, test_x):
 	predictions = model.predict(test_x)
 	return predictions
 
+#Print Confusion Matrix and Accuracy
+def accuracy_insights(labels, predictions):
+	cm = confusion_matrix(predictions, labels)
+	print("Clear Cancel")
+	print(cm)
+	print(get_accuracy(labels, predictions))
 
 
-
-train_x, train_y, test_x, test_y = get_data()
-print(get_accuracy(numpy.ravel(test_y), get_predictions(MLPClassifier(), train_x, numpy.ravel(train_y), test_x)))
+train_x, train_y, test_x, test_y = get_data(24)
+accuracy_insights(numpy.ravel(test_y), get_predictions(MLPClassifier(), train_x, numpy.ravel(train_y), test_x))
 
 
 
