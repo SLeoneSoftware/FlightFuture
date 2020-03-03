@@ -1,6 +1,5 @@
 import numpy
 import os
-import itertools
 import sqlite3
 from sklearn import preprocessing
 from sklearn.neural_network import MLPClassifier
@@ -19,32 +18,41 @@ def get_data(file='flights-sample.csv',path='data',seed=1067748903,datatype=str)
 	x = numpy.hstack((num_x[:,[ 0,1,2,3]], alph_x[:,[0]], num_x[:,[4]], alph_x[:,[1,2,3]], num_x[:,[ 5,6,7,8]]))
 	#This project only needs to predict prospects of flight cancellation/delays , Arrival Time, and Departure Time
 	#Note to self: add 21 in later
-	y = data[:,[23,24]]
+	y = data[:,[23]]
 	#Convert str arrays to float arrays
 	x = x.astype(numpy.float)
 	y = y.astype(numpy.float)
 	train_x = x[0:800, :]
 	train_y = y[0:800, :]
 	test_x = x[801:998, :]
-	test_y = y[801:908, :]
+	test_y = y[801:998, :]
 	return train_x, train_y, test_x, test_y
 
+#Returns total accurate predictions / total labels
 def get_accuracy(labels, predictions):
 	total = len(labels)
 	if not total == len(predictions):
+		print("failure")
+		print("len labels: ", len(labels))
+		print("len predictions: ", len(predictions))
 		return 0
 	else:
 		accuracy = sum(1 for (x,y) in zip(labels, predictions) if x == y)/total
 		return accuracy
+
+#Obtain results from a model with hyperparameters
+def get_predictions(model, train_x, train_y, test_x):
+	model.fit(train_x, train_y)
+	predictions = model.predict(test_x)
+	return predictions
 
 
 
 
 
 train_x, train_y, test_x, test_y = get_data()
-labels = numpy.array([0,0,1,1,1])
-predictions = numpy.array([0,0,0,1,1])
-print(get_accuracy(labels, predictions))
+print(get_accuracy(numpy.ravel(test_y), get_predictions(MLPClassifier(), train_x, numpy.ravel(train_y), test_x)))
+
 
 
 #Data By Column: Index, Numeric vs Alphabetic, Independent vs Dependent, Attribute Name
