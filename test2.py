@@ -1,5 +1,6 @@
 import numpy
 import os
+import itertools
 import sqlite3
 from sklearn import preprocessing
 from sklearn.neural_network import MLPClassifier
@@ -28,9 +29,22 @@ def get_data(file='flights-sample.csv',path='data',seed=1067748903,datatype=str)
 	test_y = y[801:908, :]
 	return train_x, train_y, test_x, test_y
 
+def get_accuracy(labels, predictions):
+	total = len(labels)
+	if not total == len(predictions):
+		return 0
+	else:
+		accuracy = sum(1 for (x,y) in zip(labels, predictions) if x == y)/total
+		return accuracy
+
+
+
 
 
 train_x, train_y, test_x, test_y = get_data()
+labels = numpy.array([0,0,1,1,1])
+predictions = numpy.array([0,0,0,1,1])
+print(get_accuracy(labels, predictions))
 
 
 #Data By Column: Index, Numeric vs Alphabetic, Independent vs Dependent, Attribute Name
