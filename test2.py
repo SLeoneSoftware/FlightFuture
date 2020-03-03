@@ -46,7 +46,6 @@ def get_predictions(model, train_x, train_y, test_x):
 
 
 
-
 train_x, train_y, test_x, test_y = get_data()
 print(get_accuracy(numpy.ravel(test_y), get_predictions(MLPClassifier(), train_x, numpy.ravel(train_y), test_x)))
 
