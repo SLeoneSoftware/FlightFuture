@@ -44,7 +44,8 @@ def get_predictions(model, train_x, train_y, test_x):
 	predictions = model.predict(test_x)
 	return predictions
 
-#Print Confusion Matrix and Accuracy
+#Print a series of scoring metrics
+#Includes Confusion matrix and accuracy
 def accuracy_insights(labels, predictions):
 	cm = confusion_matrix(predictions, labels)
 	print(cm)
