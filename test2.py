@@ -3,6 +3,8 @@ import os
 import sqlite3
 from sklearn import preprocessing
 from sklearn.metrics import confusion_matrix
+from sklearn.model_selection import GridSearchCV
+from sklearn.model_selection import StratifiedKFold
 from sklearn.neural_network import MLPClassifier
 
 #Obtain and clean flight data from csv file
@@ -45,9 +47,17 @@ def get_predictions(model, train_x, train_y, test_x):
 #Print Confusion Matrix and Accuracy
 def accuracy_insights(labels, predictions):
 	cm = confusion_matrix(predictions, labels)
-	print("Clear Cancel")
 	print(cm)
 	print(get_accuracy(labels, predictions))
+
+#Grid Search over a model to obtain best hyperparameters
+def grid_search(model, param_dict=None):
+	if param_dict is None:
+		print("Add implementation here later to support taking any model")
+	else:
+		clf = GridSearchCV(model, param_dict, cv=StratifiedKFold(n_splits=3, shuffle=False))
+		clf.fit(train_X, train_Y)
+
 
 
 train_x, train_y, test_x, test_y = get_data(24)
