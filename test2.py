@@ -52,17 +52,28 @@ def accuracy_insights(labels, predictions):
 	print(get_accuracy(labels, predictions))
 
 #Grid Search over a model to obtain best hyperparameters
-def grid_search(model, param_dict=None):
-	if param_dict is None:
-		print("Add implementation here later to support taking any model")
-	else:
-		clf = GridSearchCV(model, param_dict, cv=StratifiedKFold(n_splits=3, shuffle=False))
-		clf.fit(train_X, train_Y)
+def grid_search(model,train_x, train_y, param_dict=None):
+	clf = GridSearchCV(model, param_dict, cv=StratifiedKFold(n_splits=3, shuffle=False))
+	clf.fit(train_x, numpy.ravel(train_y))
+
+#Grid Search the Neural Network
+#All possible qualitative hyperparameter values are provided
+#A wide range of possible quantitative hyperparameters are provided, to ensure that the whole range of possibilities is covered
+def grid_search_nn(train_x, train_y):
+	alpha = [.00001, .0001, .001, .01, .1, .2, .4, .6, .8]
+	solver = ['lbfgs', 'sgd', 'adam']
+	activation = ['identity', 'logistic', 'tanh', 'relu']
+	tol = [.00001, .0001, .001, .01, .1]
+	hidden_layer_sizes = [(100,100, 100), (100,100, 100, 100), (100,100, 100, 100, 100),(100,100, 100, 100, 100, 100) ,(100,100, 100, 100, 100, 100, 100), (100,100, 100, 100, 100, 100, 100, 100),(100,100, 100, 100, 100, 100, 100, 100, 100), (100,100, 100, 100, 100, 100, 100, 100, 100, 100), (10,10, 10), (10,10, 10, 10), (10,10, 10, 10, 10),(10,10, 10, 10, 10, 10) ,(10,10, 10, 10, 10, 10, 10), (10,10, 10, 10, 10, 10, 10, 10),(10,10, 10, 10, 10, 10, 10, 10, 10), (10,10, 10, 10, 10, 10, 10, 10, 10, 10)]
+	learning_rate = ['constant', 'invscaling', 'adaptive']
+	param_dict = dict(hidden_layer_sizes = hidden_layer_sizes,activation=activation, alpha = alpha, solver = solver, tol = tol, learning_rate = learning_rate )
+	grid_search(MLPClassifier(), train_x, train_y, param_dict)
 
 
 
 train_x, train_y, test_x, test_y = get_data(24)
-accuracy_insights(numpy.ravel(test_y), get_predictions(MLPClassifier(), train_x, numpy.ravel(train_y), test_x))
+grid_search_nn(train_x, train_y)
+#accuracy_insights(numpy.ravel(test_y), get_predictions(MLPClassifier(), train_x, numpy.ravel(train_y), test_x))
 
 
 
