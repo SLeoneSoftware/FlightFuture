@@ -55,6 +55,7 @@ def accuracy_insights(labels, predictions):
 def grid_search(model,train_x, train_y, param_dict=None):
 	clf = GridSearchCV(model, param_dict, cv=StratifiedKFold(n_splits=3, shuffle=False))
 	clf.fit(train_x, numpy.ravel(train_y))
+	return clf.best_params_
 
 #Grid Search the Neural Network
 #All possible qualitative hyperparameter values are provided
