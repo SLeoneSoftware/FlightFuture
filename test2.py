@@ -68,7 +68,8 @@ def grid_search_nn(train_x, train_y):
 	hidden_layer_sizes = [(100,100, 100), (100,100, 100, 100), (100,100, 100, 100, 100),(100,100, 100, 100, 100, 100) ,(100,100, 100, 100, 100, 100, 100), (100,100, 100, 100, 100, 100, 100, 100),(100,100, 100, 100, 100, 100, 100, 100, 100), (100,100, 100, 100, 100, 100, 100, 100, 100, 100), (10,10, 10), (10,10, 10, 10), (10,10, 10, 10, 10),(10,10, 10, 10, 10, 10) ,(10,10, 10, 10, 10, 10, 10), (10,10, 10, 10, 10, 10, 10, 10),(10,10, 10, 10, 10, 10, 10, 10, 10), (10,10, 10, 10, 10, 10, 10, 10, 10, 10)]
 	learning_rate = ['constant', 'invscaling', 'adaptive']
 	param_dict = dict(hidden_layer_sizes = hidden_layer_sizes,activation=activation, alpha = alpha, solver = solver, tol = tol, learning_rate = learning_rate )
-	grid_search(MLPClassifier(), train_x, train_y, param_dict)
+	best_params = grid_search(MLPClassifier(), train_x, train_y, param_dict)
+	return MLPClassifier() #insert best_param results here
 
 
 
